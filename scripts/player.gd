@@ -1,6 +1,7 @@
 extends CharacterBody3D
 
 @onready var animated_sprite_2d = $CanvasLayer/GunBase/AnimatedSprite2D
+@onready var animation_player = $CanvasLayer/GunBase/AnimationPlayer
 @onready var ray_cast_3d = $RayCast3D
 @onready var shoot_sound = $ShootSound
 @onready var out_of_ammo_sound = $OutOfAmmoSound
@@ -66,14 +67,17 @@ func _physics_process(delta):
 		velocity.y = JUMP_VELOCITY
 		
 	if Input.is_action_pressed("sprint"):
+		animation_player.speed_scale = 2
 		speed = SPRINT_SPEED
 	else:
+		animation_player.speed_scale = 1
 		speed = WALK_SPEED
 	
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forwards", "move_backwards")
 	var direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if is_on_floor():	
+	if is_on_floor():
 		if direction:
+			animation_player.play("gunsway")
 			velocity.x = direction.x * speed
 			velocity.z = direction.z * speed
 		else:
