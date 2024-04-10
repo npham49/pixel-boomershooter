@@ -1,0 +1,188 @@
+[gd_scene load_steps=16 format=3 uid="uid://dmrd44i0lcwm0"]
+
+[ext_resource type="Texture2D" uid="uid://c6kkpgaoa8wu6" path="res://assets/player/gun/gun_sprites.png" id="1_0inov"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_debk7"]
+[ext_resource type="AudioStream" uid="uid://b7e236fm27a5g" path="res://assets/player/gun/revolver_shot1.wav" id="2_qhl2r"]
+[ext_resource type="AudioStream" uid="uid://cm4m1xcios6d" path="res://assets/player/gun/empty-gun-shot-6209.mp3" id="4_fg1n2"]
+[ext_resource type="AudioStream" uid="uid://nwwsf1vcxp2r" path="res://assets/player/gun/1911-reload-6248.mp3" id="5_ys48n"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i22hc"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_t05i4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k2yyv"]
+atlas = ExtResource("1_0inov")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_us6kq"]
+atlas = ExtResource("1_0inov")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dahjx"]
+atlas = ExtResource("1_0inov")
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s2hrv"]
+atlas = ExtResource("1_0inov")
+region = Rect2(1024, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_57gd6"]
+atlas = ExtResource("1_0inov")
+region = Rect2(1536, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dfre4"]
+atlas = ExtResource("1_0inov")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rurd2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k2yyv")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_us6kq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_us6kq")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dahjx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s2hrv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_57gd6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dfre4")
+}],
+"loop": false,
+"name": &"shoot",
+"speed": 10.0
+}]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ynwn5"]
+font_size = 24
+outline_size = 1
+outline_color = Color(1, 1, 0, 1)
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_debk7")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1.5, 2.08165e-12)
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 2.08165e-12, 2.08165e-12)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0310475, 1.02604, -0.0498316)
+shape = SubResource("CapsuleShape3D_i22hc")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00317436, 0, 0)
+mesh = SubResource("CapsuleMesh_t05i4")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1.5, 2.08165e-12)
+target_position = Vector3(1.5, 2.08165e-12, -1000)
+collision_mask = 3
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GunBase" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CanvasLayer/GunBase"]
+position = Vector2(247, -93)
+scale = Vector2(0.507812, 0.507812)
+sprite_frames = SubResource("SpriteFrames_rurd2")
+animation = &"run"
+autoplay = "idle"
+
+[node name="AmmoDisplay" type="Label" parent="CanvasLayer/GunBase"]
+layout_mode = 0
+offset_left = 479.0
+offset_top = -22.0
+offset_right = 561.0
+offset_bottom = 18.0
+label_settings = SubResource("LabelSettings_ynwn5")
+horizontal_alignment = 1
+
+[node name="Crosshair" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.462745)
+
+[node name="Death screen" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Panel" type="Panel" parent="CanvasLayer/Death screen"]
+layout_mode = 0
+offset_left = 493.0
+offset_top = 272.0
+offset_right = 657.0
+offset_bottom = 374.0
+
+[node name="Label" type="Label" parent="CanvasLayer/Death screen/Panel"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 13.0
+offset_right = 133.0
+offset_bottom = 36.0
+text = "You died"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="CanvasLayer/Death screen/Panel"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 62.0
+offset_right = 118.0
+offset_bottom = 93.0
+text = "Restart"
+
+[node name="ShootSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_qhl2r")
+
+[node name="OutOfAmmoSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_fg1n2")
+
+[node name="ReloadSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_ys48n")
